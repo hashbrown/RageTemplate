@@ -23,9 +23,9 @@ public class RageProvider extends ContentProvider {
 
 	// URI MATCHER-RELATED
 	// URI matcher ID for the main rage comics URI pattern
-	private static final int MATCHER_DEVICES = 1;
-	// URI matcher ID for the single device ID pattern
-	private static final int MATCHER_DEVICE_ID = 2;
+	private static final int MATCHER_COMICS = 1;
+	// URI matcher ID for the single rage comic ID pattern
+	private static final int MATCHER_COMIC_ID = 2;
 	private static final UriMatcher uriMatcher;
 
 	// Handle to a new ProviderDbHelper.
@@ -35,10 +35,10 @@ public class RageProvider extends ContentProvider {
 	static {
 		// Build up URI matcher
 		uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-		// Add a pattern to route URIs terminated with just "rage comics"
-		uriMatcher.addURI(RageProviderContracts.AUTHORITY, RageComics.TABLE_NAME, MATCHER_DEVICES);
-		// Add a pattern to route URIs terminated with device IDs
-		uriMatcher.addURI(RageProviderContracts.AUTHORITY, RageComics.TABLE_NAME + "/#", MATCHER_DEVICE_ID);
+		// Add a pattern to route URIs terminated with just rageComics"
+		uriMatcher.addURI(RageProviderContracts.AUTHORITY, RageComics.TABLE_NAME, MATCHER_COMICS);
+		// Add a pattern to route URIs terminated with comic IDs
+		uriMatcher.addURI(RageProviderContracts.AUTHORITY, RageComics.TABLE_NAME + "/#", MATCHER_COMIC_ID);
 
 		// Create and initializes a projection map that returns all columns,
 		// This map returns a column name for a given string. The two are usually equal, but we need this structure
@@ -64,15 +64,15 @@ public class RageProvider extends ContentProvider {
 		int deletedRowsCount;
 
 		switch (uriMatcher.match(uri)) { // Perform the delete based on URI pattern
-			case MATCHER_DEVICES:
+			case MATCHER_COMICS:
 				// Delete all the rage comics matching the where column/value pairs
 				deletedRowsCount = db.delete(RageComics.TABLE_NAME, whereClause, whereValues);
 				break;
 
-			case MATCHER_DEVICE_ID:
-				// Modify the where clause to only delete the device with the given ID
-				String deviceId = uri.getPathSegments().get(RageComics.DEVICE_ID_PATH_POSITION);
-				finalWhere = RageComics._ID + " = " + deviceId;
+			case MATCHER_COMIC_ID:
+				// Modify the where clause to only delete the comic with the given ID
+				String comicId = uri.getPathSegments().get(RageComics.COMIC_ID_PATH_POSITION);
+				finalWhere = RageComics._ID + " = " + comicId;
 				if (whereClause != null) {
 					finalWhere = finalWhere + " AND " + whereClause;
 				}
@@ -96,7 +96,7 @@ public class RageProvider extends ContentProvider {
 	@Override
 	public Uri insert(Uri uri, ContentValues initialValues) {
 		// Validate the incoming URI.
-		if (uriMatcher.match(uri) != MATCHER_DEVICES) {
+		if (uriMatcher.match(uri) != MATCHER_COMICS) {
 			throw new IllegalArgumentException("Unknown URI " + uri);
 		}
 
@@ -110,11 +110,11 @@ public class RageProvider extends ContentProvider {
 		long newRowId = this.dbHelper.getWritableDatabase().insert(RageComics.TABLE_NAME, null, values);
 
 		if (newRowId > 0) { // if rowID is -1, it means the insert failed
-			// Build a new RageComic URI with the new device's ID appended to it.
-			Uri deviceUri = ContentUris.withAppendedId(RageComics.CONTENT_ID_URI_BASE, newRowId);
+			// Build a new RageComic URI with the new comic's ID appended to it.
+			Uri comicUri = ContentUris.withAppendedId(RageComics.CONTENT_ID_URI_BASE, newRowId);
 			// Notify observers that our data changed.
-			getContext().getContentResolver().notifyChange(deviceUri, null);
-			return deviceUri;
+			getContext().getContentResolver().notifyChange(comicUri, null);
+			return comicUri;
 		}
 
 		throw new SQLException("Failed to insert row into " + uri); // Insert failed: halt and catch fire.
@@ -127,16 +127,16 @@ public class RageProvider extends ContentProvider {
 
 		// Choose the projection and adjust the "where" clause based on URI pattern-matching.
 		switch (uriMatcher.match(uri)) {
-			case MATCHER_DEVICES:
+			case MATCHER_COMICS:
 				qb.setProjectionMap(RageProjectionMap);
 				break;
 
-			// asking for a single device - use the rage comics projection, but add a where clause to only return the one
-			// device
-			case MATCHER_DEVICE_ID:
+			// asking for a single comic - use the rage comics projection, but add a where clause to only return the one
+			// comic
+			case MATCHER_COMIC_ID:
 				qb.setProjectionMap(RageProjectionMap);
-				// Find the device ID itself in the incoming URI
-				String id = uri.getPathSegments().get(RageComics.DEVICE_ID_PATH_POSITION);
+				// Find the comic ID itself in the incoming URI
+				String id = uri.getPathSegments().get(RageComics.COMIC_ID_PATH_POSITION);
 				qb.appendWhere(RageComics._ID + "=" + id);
 				break;
 
@@ -163,13 +163,13 @@ public class RageProvider extends ContentProvider {
 		// Perform the update based on the incoming URI's pattern
 		switch (uriMatcher.match(uri)) {
 
-			case MATCHER_DEVICES:
+			case MATCHER_COMICS:
 				// Perform the update and return the number of rows updated.
 				updatedRowsCount = db.update(RageComics.TABLE_NAME, updateValues, whereClause, whereValues);
 				break;
 
-			case MATCHER_DEVICE_ID:
-				String id = uri.getPathSegments().get(RageComics.DEVICE_ID_PATH_POSITION);
+			case MATCHER_COMIC_ID:
+				String id = uri.getPathSegments().get(RageComics.COMIC_ID_PATH_POSITION);
 				finalWhere = RageComics._ID + " = " + id;
 
 				// if we were passed a 'where' arg, add that to our 'finalWhere'
