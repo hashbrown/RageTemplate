@@ -5,7 +5,7 @@ import android.provider.BaseColumns;
 
 public final class RageProviderContracts {
 
-	public static final String AUTHORITY = "com.code42.crashplanpro.android.contentproviders.rageprovider";
+	public static final String AUTHORITY = "org.ragetemplate.rageprovider";
 
 	// RAGE COMIC TABLE CONTRACT
 	public static final class RageComics implements BaseColumns {
