@@ -14,6 +14,7 @@ public class ProviderDbHelper extends SQLiteOpenHelper {
 
 	public final String TAG = getClass().getSimpleName();
 
+	//Name of the database file
 	private static final String DATABASE_NAME = "rage.db";
 	private static final int DATABASE_VERSION = 1;
 
@@ -32,14 +33,14 @@ public class ProviderDbHelper extends SQLiteOpenHelper {
 		sqlBuilder.append(RageComics.THUMBNAIL + " TEXT");
 		sqlBuilder.append(RageComics.CREATED + " INTEGER");
 		sqlBuilder.append(");");
-		String sql = sqlBuilder.toString(); // putting this here to make it easier to breakpoint on
+		String sql = sqlBuilder.toString();
 		Log.i(TAG, "Creating DB table with string: '" + sql + "'");
 		db.execSQL(sql);
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		
+		//Gets called when the database is upgraded, i.e. the version number changes
 	}
 
 }
