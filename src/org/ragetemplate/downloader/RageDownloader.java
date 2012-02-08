@@ -200,15 +200,20 @@ public class RageDownloader {
 		RageComic r = null;
 		
 		try {
-			obj = obj.getJSONObject("data");
+			JSONObject data = obj.getJSONObject("data");
+			String name = data.getString("name");
+			String title = data.getString("title");
+			String author = data.getString("author");
 			
-			String name = obj.getString("name");
-			String title = obj.getString("title");
-			String author = obj.getString("author");
-			Uri thumbnailUri = Uri.parse(obj.getString("thumbnail"));
-			boolean NSFW = obj.getBoolean("over_18");
-			Date createDate = new Date(obj.getLong("created_utc"));
-			String imageUriStr = obj.getString("url");
+			Uri thumbnailUri = null;
+			try {
+				thumbnailUri = Uri.parse(data.getString("thumbnail"));
+			} catch (IllegalArgumentException e) {
+				e.printStackTrace();
+			}
+			boolean NSFW = data.getBoolean("over_18");
+			Date createDate = new Date(data.getLong("created_utc"));
+			String imageUriStr = data.getString("url");
 			if (!imageUriStr.endsWith(".png")) {
 				imageUriStr = imageUriStr + ".png";
 			}

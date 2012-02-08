@@ -11,7 +11,7 @@ public final class RageProviderContracts {
 	// RAGE COMIC TABLE CONTRACT
 	public static final class RageComics implements BaseColumns {
 
-		public static final String TABLE_NAME = "ragecomics";
+		public static final String TABLE_NAME = "rage";
 
 		// URI DEFS
 		private static final String SCHEME = "content://";
@@ -25,7 +25,7 @@ public final class RageProviderContracts {
 		// content://org.ragetemplate.rageprovider/rage/ -- used for content provider insert() call
 		public static final Uri CONTENT_ID_URI_BASE = Uri.parse(SCHEME + AUTHORITY + URI_PATH_WITH_COMIC_ID);
 		// content://org.ragetemplate.rageprovider/rage/#
-		public static final Uri CONTENT_ID_URI_PATTERN = Uri.parse(SCHEME + AUTHORITY + URI_PATH_WITH_COMIC_ID + "/#");
+		public static final Uri CONTENT_ID_URI_PATTERN = Uri.parse(SCHEME + AUTHORITY + URI_PATH_WITH_COMIC_ID + "#");
 
 		public static final String[] ALL_COLUMNS;
 

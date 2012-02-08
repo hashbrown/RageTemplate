@@ -17,7 +17,7 @@ import android.webkit.MimeTypeMap;
 import android.widget.ListView;
 
 
-public class RageList extends ListFragment implements LoaderCallbacks<Cursor> {
+public class RageList extends ListFragment implements LoaderCallbacks<Cursor>{
 
 	private final String TAG = getClass().getSimpleName();
 	
