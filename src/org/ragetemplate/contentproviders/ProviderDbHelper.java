@@ -15,6 +15,7 @@ public class ProviderDbHelper extends SQLiteOpenHelper {
 
 	public final String TAG = getClass().getSimpleName();
 
+	//Name of the database file
 	private static final String DATABASE_NAME = "rage.db";
 	private static final int DATABASE_VERSION = 1;
 
@@ -42,7 +43,7 @@ public class ProviderDbHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		// TODO: fill in an example of this
+		//Gets called when the database is upgraded, i.e. the version number changes
 	}
 
 }
