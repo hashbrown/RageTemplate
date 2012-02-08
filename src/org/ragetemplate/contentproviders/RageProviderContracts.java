@@ -31,6 +31,7 @@ public final class RageProviderContracts {
 
 		static {
 			ALL_COLUMNS = new String[] { RageComics._ID, RageComics.TITLE, RageComics.AUTHOR, RageComics.IMAGE_URI, RageComics.THUMBNAIL_URI, RageComics.CREATED };
+			ALL_COLUMNS = new String[] { RageComics._ID, RageComics.NAME, RageComics.TITLE, RageComics.AUTHOR, RageComics.IMAGE_URI, RageComics.THUMBNAIL_URI, RageComics.CREATED, RageComics.IS_NSFW };
 		}
 		
 		/**
