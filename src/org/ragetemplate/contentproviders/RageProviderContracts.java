@@ -24,9 +24,9 @@ public final class RageProviderContracts {
 		// content://org.ragetemplate.rageprovider/rage
 		public static final Uri CONTENT_URI = Uri.parse(URI_PREFIX + URI_PATH_COMICS);
 		// content://org.ragetemplate.rageprovider/rage/ -- used for content provider insert() call
-		public static final Uri CONTENT_ID_URI_BASE = Uri.parse(SCHEME + AUTHORITY + URI_PATH_WITH_COMIC_ID);
+		static final Uri CONTENT_ID_URI_BASE = Uri.parse(SCHEME + AUTHORITY + URI_PATH_WITH_COMIC_ID);
 		// content://org.ragetemplate.rageprovider/rage/#
-		public static final Uri CONTENT_ID_URI_PATTERN = Uri.parse(SCHEME + AUTHORITY + URI_PATH_WITH_COMIC_ID + "/#");
+		static final Uri CONTENT_ID_URI_PATTERN = Uri.parse(SCHEME + AUTHORITY + URI_PATH_WITH_COMIC_ID + "/#");
 
 		public static final String[] ALL_COLUMNS;
 

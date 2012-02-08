@@ -89,14 +89,15 @@ public class RageDownloader {
 		List<RageComic> comics = this.buildComicsList(jsonComics);
 		for (RageComic comic : comics) {
 			this.downloadComicImages(comic);
+			this.activity.getContentResolver().insert(RageComics.CONTENT_URI, comic.toContentValues());
 		}
 
 		if (comics.size() > 0) {
 			RageComic lastItem = comics.get(comics.size() - 1);
 			this.lastLoadedComicName = lastItem.getName();
-			this.performInserts(comics);
+//			this.performInserts(comics);
 		} else {
-			Log.e(TAG, "Comics list is empty, nothing to insert!");
+			Log.e(TAG, "Comics list is empty, had nothing to insert!");
 		}
 
 		Log.i(TAG, "Rage comic downloads complete.");
@@ -230,16 +231,19 @@ public class RageDownloader {
 		BufferedOutputStream out = null;
 			try {
 				out = new BufferedOutputStream(new FileOutputStream(outFile));
-				IOUtils.copy(imageStream, out);
+				if (Py.all(out, imageStream)) {
+					IOUtils.copy(imageStream, out);					
+				} else {
+					Log.wtf(TAG, "One of the streams was null?!?");
+				}
 				out.close();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 				Log.wtf(TAG, "FAIL when trying to write out a comic image??  File: " + outFile);
-			}		
+			}
 	}
-	
-
+		
 	int performInserts(List<RageComic> comics) {
 		Set<ContentValues> insertsValues = new HashSet<ContentValues>();
 
