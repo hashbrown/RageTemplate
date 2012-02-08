@@ -15,9 +15,9 @@ public final class RageProviderContracts {
 
 		// URI DEFS
 		private static final String SCHEME = "content://";
-		private static final String URI_PATH_COMICS = "/rage";
+		private static final String URI_PATH_COMICS = "/" + TABLE_NAME;
 		// Note the slash on the end of this one, as opposed to the URI_PATH_COMICS, which has no slash.
-		private static final String URI_PATH_WITH_COMIC_ID = "/rage/";
+		private static final String URI_PATH_WITH_COMIC_ID = "/" + TABLE_NAME + "/";
 		public static final int COMIC_ID_PATH_POSITION = 1;
 
 		// content://org.ragetemplate.rageprovider/rage

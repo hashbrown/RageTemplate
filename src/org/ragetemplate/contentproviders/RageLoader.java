@@ -1,7 +1,5 @@
 package org.ragetemplate.contentproviders;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Date;
 
 import org.ragetemplate.contentproviders.RageProviderContracts.RageComics;

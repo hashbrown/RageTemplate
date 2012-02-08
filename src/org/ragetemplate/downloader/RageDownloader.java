@@ -98,7 +98,7 @@ public class RageDownloader {
 		} else {
 			Log.e(TAG, "Comics list is empty, nothing to insert!");
 		}
-				
+
 		Log.i(TAG, "Rage comic downloads complete.");
 	}
 
@@ -108,13 +108,14 @@ public class RageDownloader {
 			File comicFile = new File(this.imagesDir, c.getImageUri().getLastPathSegment());
 			this.saveImageAndCloseStream(comicFile, this.buildImageStream(comicUrl));
 
-			File thumbFile = new File(this.thumbnailsDir, c.getThumbnailUri().getLastPathSegment());
-			URL thumbUrl = new URL(c.getThumbnailUri().toString());
-			this.saveImageAndCloseStream(thumbFile, this.buildImageStream(thumbUrl));
+			if (!c.isNSFW()) {
+				File thumbFile = new File(this.thumbnailsDir, c.getThumbnailUri().getLastPathSegment());
+				URL thumbUrl = new URL(c.getThumbnailUri().toString());
+				this.saveImageAndCloseStream(thumbFile, this.buildImageStream(thumbUrl));				
+			}
 			
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.e(TAG, "YOU FAIL");
 		}
 	}
 
@@ -157,7 +158,7 @@ public class RageDownloader {
 			b.appendQueryParameter("after", startAfterName);
 			jsonUri = b.build();
 		}
-		
+
 		HttpURLConnection urlConnection = null;
 		try {
 			urlConnection = (HttpURLConnection) new URL(jsonUri.toString()).openConnection();
@@ -195,10 +196,12 @@ public class RageDownloader {
 			//      "over_18":false,
 			//      "url":"http://imgur.com/ZkMNe",  // add '.png' for the file name
 			//       "created_utc":1328487484,
-
+		
 		RageComic r = null;
 		
 		try {
+			obj = obj.getJSONObject("data");
+			
 			String name = obj.getString("name");
 			String title = obj.getString("title");
 			String author = obj.getString("author");

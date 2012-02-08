@@ -17,7 +17,7 @@ public class RageCursorAdapter extends CursorAdapter {
 
 
 	public RageCursorAdapter(Context context) {
-		super(context, null, 0);
+		super(context, null);
 	}
 
 	@Override
