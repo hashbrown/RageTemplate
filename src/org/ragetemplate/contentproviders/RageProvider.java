@@ -33,7 +33,7 @@ public class RageProvider extends ContentProvider {
 	static {
 		// Build up URI matcher
 		uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-		// Add a pattern to route URIs terminated with just rageComics"
+		// Add a pattern to route URIs terminated with just "rageComics"
 		uriMatcher.addURI(RageProviderContracts.AUTHORITY, RageComics.TABLE_NAME, MATCHER_COMICS);
 		// Add a pattern to route URIs terminated with comic IDs
 		uriMatcher.addURI(RageProviderContracts.AUTHORITY, RageComics.TABLE_NAME + "/#", MATCHER_COMIC_ID);
@@ -60,7 +60,9 @@ public class RageProvider extends ContentProvider {
 		int deletedRowsCount;
 
 		// Perform the delete based on URI pattern
-		switch (uriMatcher.match(uri)) {
+		db.beginTransaction();
+		try {
+			switch (uriMatcher.match(uri)) {
 			case MATCHER_COMICS:
 				// Delete all the rage comics matching the where column/value pairs
 				deletedRowsCount = db.delete(RageComics.TABLE_NAME, whereClause, whereValues);
@@ -81,6 +83,9 @@ public class RageProvider extends ContentProvider {
 			// If the incoming URI is invalid, throws an exception.
 			default:
 				throw new IllegalArgumentException("Unknown URI " + uri);
+			}
+		} finally {
+			db.endTransaction();
 		}
 
 		// Notify observers of the the change
@@ -124,22 +129,22 @@ public class RageProvider extends ContentProvider {
 
 		// Choose the projection and adjust the "where" clause based on URI pattern-matching.
 		switch (uriMatcher.match(uri)) {
-			case MATCHER_COMICS:
-				qb.setProjectionMap(RageProjectionMap);
-				break;
+		case MATCHER_COMICS:
+			qb.setProjectionMap(RageProjectionMap);
+			break;
 
-			// asking for a single comic - use the rage comics projection, but add a where clause to only return the one
-			// comic
-			case MATCHER_COMIC_ID:
-				qb.setProjectionMap(RageProjectionMap);
-				// Find the comic ID itself in the incoming URI
-				String id = uri.getPathSegments().get(RageComics.COMIC_ID_PATH_POSITION);
-				qb.appendWhere(RageComics._ID + "=" + id);
-				break;
+		// asking for a single comic - use the rage comics projection, but add a where clause to only return the one
+		// comic
+		case MATCHER_COMIC_ID:
+			qb.setProjectionMap(RageProjectionMap);
+			// Find the comic ID itself in the incoming URI
+			String id = uri.getPathSegments().get(RageComics.COMIC_ID_PATH_POSITION);
+			qb.appendWhere(RageComics._ID + "=" + id);
+			break;
 
-			default:
-				// If the URI doesn't match any of the known patterns, throw an exception.
-				throw new IllegalArgumentException("Unknown URI " + uri);
+		default:
+			// If the URI doesn't match any of the known patterns, throw an exception.
+			throw new IllegalArgumentException("Unknown URI " + uri);
 		}
 
 		SQLiteDatabase db = this.dbHelper.getReadableDatabase();
@@ -157,8 +162,10 @@ public class RageProvider extends ContentProvider {
 		int updatedRowsCount;
 		String finalWhere;
 
+		db.beginTransaction();
 		// Perform the update based on the incoming URI's pattern
-		switch (uriMatcher.match(uri)) {
+		try {
+			switch (uriMatcher.match(uri)) {
 
 			case MATCHER_COMICS:
 				// Perform the update and return the number of rows updated.
@@ -179,19 +186,26 @@ public class RageProvider extends ContentProvider {
 			default:
 				// Incoming URI pattern is invalid: halt & catch fire.
 				throw new IllegalArgumentException("Unknown URI " + uri);
+			}
+		} finally {
+			db.endTransaction();
 		}
 
 		/*
-		 * Gets a handle to the content resolver object for the current context, and notifies it that the incoming URI
-		 * changed. The object passes this along to the resolver framework, and observers that have registered
+		 * Gets a handle to the content resolver object for the current context,
+		 * and notifies it that the incoming URI changed. The object passes this
+		 * along to the resolver framework, and observers that have registered
 		 * themselves for the provider are notified.
 		 */
-		getContext().getContentResolver().notifyChange(uri, null);
+		if (updatedRowsCount > 0) {
+			getContext().getContentResolver().notifyChange(uri, null);
+		}
 
 		// Returns the number of rows updated.
 		return updatedRowsCount;
 	}
-	
+
+	//Default bulkInsert is terrible.  Make it better!
 	@Override
 	public int bulkInsert(Uri uri, ContentValues[] values) {
 		this.validateOrThrow(uri);
@@ -215,7 +229,8 @@ public class RageProvider extends ContentProvider {
 			db.endTransaction();
 		}
 	}
-	
+
+	//Used by our implementation of builkInsert
 	private long insert(Uri uri, ContentValues initialValues, SQLiteDatabase writableDb) {
 		// NOTE: this method does not initiate a transaction - this is up to the caller!
 		ContentValues values;
@@ -231,7 +246,7 @@ public class RageProvider extends ContentProvider {
 		}
 		return newRowId;
 	}
-	
+
 	private void validateOrThrow(Uri uri) {
 		// Validate the incoming URI.
 		if (uriMatcher.match(uri) != MATCHER_COMICS) {
