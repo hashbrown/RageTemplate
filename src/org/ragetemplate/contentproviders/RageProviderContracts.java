@@ -3,6 +3,7 @@ package org.ragetemplate.contentproviders;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
+
 public final class RageProviderContracts {
 
 	public static final String AUTHORITY = "org.ragetemplate.rageprovider";
@@ -27,9 +28,17 @@ public final class RageProviderContracts {
 
 		static {
 			// Apologies for the formatting here, but the autoformatter forces it this way
-			ALL_COLUMNS = new String[] { RageComics._ID, RageComics.TITLE, RageComics.AUTHOR, RageComics.URL, RageComics.THUMBNAIL, RageComics.CREATED };
+			ALL_COLUMNS = new String[] { RageComics._ID, RageComics.TITLE, RageComics.AUTHOR, RageComics.IMAGE_URI, RageComics.THUMBNAIL_URI, RageComics.CREATED };
 		}
 		// COLUMN DEFS
+		/**
+		 * Column name for the 'name' (the unique ID + 'kind' to refer to a comic with Reddit's JSON API)
+		 * <P>
+		 * Type: TEXT
+		 * </P>
+		 */
+		public static final String NAME = "name";		
+
 		/**
 		 * Column name for the comic title
 		 * <P>
@@ -47,29 +56,36 @@ public final class RageProviderContracts {
 		public static final String AUTHOR = "author";
 
 		/**
-		 * Column name for comic URL
+		 * Column name for comic file URI
 		 * <P>
 		 * Type: TEXT
 		 * </P>
 		 */
-		public static final String URL = "url";
+		public static final String IMAGE_URI = "uri";
 
 		/**
-		 * Column name for the comic thumbnail URL
+		 * Column name for the comic's thumbnail file URI
 		 * <P>
 		 * Type: TEXT
 		 * </P>
 		 */
-		public static final String THUMBNAIL = "thumbnail";
+		public static final String THUMBNAIL_URI = "thumbnail_uri";
 		
 		/**
 		 * Column name for the creation date
 		 * <P>
-		 * Type: LONG
+		 * Type: LONG  (UNIX timestamp)
 		 * </P>
 		 */
 		public static final String CREATED = "timestamp";
 
+		/**
+		 * Column name for a boolean indicating if the comic is NSFW
+		 * <P>
+		 * Type: INTEGER (actually a boolean - 0 for False, 1 for True) - sqlite has no proper booleans
+		 * </P>
+		 */
+		public static final String IS_NSFW = "is_nsfw";		
 
 		// Prevent instantiation of this class
 		private RageComics() {

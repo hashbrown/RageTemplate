@@ -8,7 +8,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 /**
- * This creates/opens the database.
+ * This creates, updates, and opens the database.  Opening is handled by the superclass, we handle 
+ * the create & upgrade steps
  */
 public class ProviderDbHelper extends SQLiteOpenHelper {
 
@@ -26,20 +27,22 @@ public class ProviderDbHelper extends SQLiteOpenHelper {
 		StringBuilder sqlBuilder = new StringBuilder();
 		sqlBuilder.append("CREATE TABLE " + RageComics.TABLE_NAME + " (");
 		sqlBuilder.append(RageComics._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, ");
+		sqlBuilder.append(RageComics.NAME + " TEXT, ");
 		sqlBuilder.append(RageComics.TITLE + " TEXT, ");
 		sqlBuilder.append(RageComics.AUTHOR + " TEXT, ");
-		sqlBuilder.append(RageComics.URL + " TEXT, ");
-		sqlBuilder.append(RageComics.THUMBNAIL + " TEXT");
-		sqlBuilder.append(RageComics.CREATED + " INTEGER");
+		sqlBuilder.append(RageComics.IMAGE_URI + " TEXT, ");
+		sqlBuilder.append(RageComics.THUMBNAIL_URI + " TEXT, ");
+		sqlBuilder.append(RageComics.CREATED + " INTEGER, ");
+		sqlBuilder.append(RageComics.IS_NSFW + " INTEGER");
 		sqlBuilder.append(");");
-		String sql = sqlBuilder.toString(); // putting this here to make it easier to breakpoint on
+		String sql = sqlBuilder.toString();
 		Log.i(TAG, "Creating DB table with string: '" + sql + "'");
 		db.execSQL(sql);
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		
+		// TODO: fill in an example of this
 	}
 
 }

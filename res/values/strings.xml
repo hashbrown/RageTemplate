@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="hello">Hello World, RageTemplateActivity!</string>
     <string name="app_name">RageTemplate</string>
+    <string name="rage_comics_folder">rage_comics</string>
+    <string name="rage_thumbnails_folder">rage_thumbs</string>
+
 </resources>
