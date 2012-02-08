@@ -35,6 +35,7 @@ public class RageTemplateActivity extends Activity {
 		// Handle item selection
 		switch (item.getItemId()) {
 			case R.id.get_more_rage:
+				this.setProgressBarIndeterminateVisibility(true);
 				this.rageDownloader.getMoreRage(25);
 				return true;
 			default:
