@@ -112,7 +112,7 @@ public class RageDownloader {
 			if (!c.isNSFW()) {
 				File thumbFile = new File(this.thumbnailsDir, c.getThumbnailUri().getLastPathSegment());
 				URL thumbUrl = new URL(c.getThumbnailUri().toString());
-				this.saveImageAndCloseStream(thumbFile, this.buildImageStream(thumbUrl));
+				this.saveImageAndCloseStream(thumbFile, this.buildImageStream(thumbUrl));				
 			}
 			
 		} catch (MalformedURLException e) {
@@ -243,7 +243,7 @@ public class RageDownloader {
 				Log.wtf(TAG, "FAIL when trying to write out a comic image??  File: " + outFile);
 			}
 	}
-		
+
 	int performInserts(List<RageComic> comics) {
 		Set<ContentValues> insertsValues = new HashSet<ContentValues>();
 
