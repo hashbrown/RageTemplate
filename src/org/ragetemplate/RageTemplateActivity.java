@@ -17,7 +17,7 @@ public class RageTemplateActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
+        setContentView(R.layout.rage_activity);
 		this.setProgressBarIndeterminate(true);
         
 		this.rageDownloader = new RageDownloader(this);

@@ -1,4 +1,4 @@
-package org.ragetemplate.ui;
+package org.ragetemplate.contentproviders;
 
 import org.ragetemplate.R;
 import org.ragetemplate.contentproviders.RageProviderContracts.RageComics;

@@ -1,5 +1,6 @@
 package org.ragetemplate.ui;
 
+import org.ragetemplate.contentproviders.RageCursorAdapter;
 import org.ragetemplate.contentproviders.RageLoader;
 import org.ragetemplate.data.RageComic;
 
