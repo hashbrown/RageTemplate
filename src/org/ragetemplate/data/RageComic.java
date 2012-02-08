@@ -62,8 +62,10 @@ public class RageComic {
 		rowData.put(RageComics.NAME, this.getName());
 		rowData.put(RageComics.TITLE, this.getTitle());
 		rowData.put(RageComics.AUTHOR, this.getAuthor());
-		rowData.put(RageComics.IMAGE_URI, this.getImageUri().toString());
-		rowData.put(RageComics.THUMBNAIL_URI, this.getThumbnailUri().toString());
+		rowData.put(RageComics.COMIC_FILENAME, this.getImageUri().getLastPathSegment());
+		rowData.put(RageComics.THUMBNAIL_FILENAME, this.getThumbnailUri().getLastPathSegment());
+		rowData.put(RageComics.CREATED, this.created.getTime());
+		rowData.put(RageComics.IS_NSFW, this.NSFW);		
 		return rowData;
 	}
 }

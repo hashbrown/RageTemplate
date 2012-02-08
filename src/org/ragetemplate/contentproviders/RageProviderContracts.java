@@ -14,14 +14,15 @@ public final class RageProviderContracts {
 		public static final String TABLE_NAME = "ragecomics";
 
 		// URI DEFS
-		private static final String SCHEME = "content://";
+		static final String SCHEME = "content://";
+		public static final String URI_PREFIX = SCHEME + AUTHORITY;
 		private static final String URI_PATH_COMICS = "/" + TABLE_NAME;
 		// Note the slash on the end of this one, as opposed to the URI_PATH_COMICS, which has no slash.
 		private static final String URI_PATH_WITH_COMIC_ID = "/" + TABLE_NAME + "/";
 		public static final int COMIC_ID_PATH_POSITION = 1;
 
 		// content://org.ragetemplate.rageprovider/rage
-		public static final Uri CONTENT_URI = Uri.parse(SCHEME + AUTHORITY + URI_PATH_COMICS);
+		public static final Uri CONTENT_URI = Uri.parse(URI_PREFIX + URI_PATH_COMICS);
 		// content://org.ragetemplate.rageprovider/rage/ -- used for content provider insert() call
 		public static final Uri CONTENT_ID_URI_BASE = Uri.parse(SCHEME + AUTHORITY + URI_PATH_WITH_COMIC_ID);
 		// content://org.ragetemplate.rageprovider/rage/#
@@ -30,7 +31,16 @@ public final class RageProviderContracts {
 		public static final String[] ALL_COLUMNS;
 
 		static {
-			ALL_COLUMNS = new String[] { RageComics._ID, RageComics.TITLE, RageComics.AUTHOR, RageComics.IMAGE_URI, RageComics.THUMBNAIL_URI, RageComics.CREATED };
+			ALL_COLUMNS = new String[] { 
+					RageComics._ID, 
+					RageComics.NAME,
+					RageComics.TITLE, 
+					RageComics.AUTHOR, 
+					RageComics.COMIC_FILENAME, 
+					RageComics.THUMBNAIL_FILENAME, 
+					RageComics.CREATED,
+					RageComics.IS_NSFW					
+			};
 		}
 		
 		/**
@@ -65,7 +75,7 @@ public final class RageProviderContracts {
 		 * Type: TEXT
 		 * </P>
 		 */
-		public static final String IMAGE_URI = "uri";
+		public static final String COMIC_FILENAME = "comic_filename";
 
 		/**
 		 * Column name for the comic's thumbnail file URI
@@ -73,7 +83,7 @@ public final class RageProviderContracts {
 		 * Type: TEXT
 		 * </P>
 		 */
-		public static final String THUMBNAIL_URI = "thumbnail_uri";
+		public static final String THUMBNAIL_FILENAME = "thumbnail_filename";
 
 		/**
 		 * Column name for the creation date
@@ -82,6 +92,7 @@ public final class RageProviderContracts {
 		 * </P>
 		 */
 		public static final String CREATED = "timestamp";
+
 		/**
 		 * Column name for a boolean indicating if the comic is NSFW
 		 * <P>

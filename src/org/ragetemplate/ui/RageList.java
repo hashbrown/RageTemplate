@@ -1,7 +1,10 @@
 package org.ragetemplate.ui;
 
+import org.ragetemplate.R;
 import org.ragetemplate.contentproviders.RageCursorAdapter;
 import org.ragetemplate.contentproviders.RageLoader;
+import org.ragetemplate.contentproviders.RageProviderContracts;
+import org.ragetemplate.contentproviders.RageProviderContracts.RageComics;
 import org.ragetemplate.data.RageComic;
 
 import android.app.ListFragment;
@@ -34,7 +37,7 @@ public class RageList extends ListFragment implements LoaderCallbacks<Cursor> {
 		setListAdapter(adapter);
 		
 		this.getActivity().getLoaderManager().initLoader(0, null, this);
-//		this.setListShown(false); // Start out with a progress indicator.
+		this.setListShown(false);
 	}
 	
 	protected RageComic getComicData(int index) {
@@ -43,7 +46,8 @@ public class RageList extends ListFragment implements LoaderCallbacks<Cursor> {
 			if (thing == null) {
 				return null;
 			}
-			return RageLoader.newComicFromCursor((Cursor) thing);
+			return RageLoader.newComicFromCursor(this.getActivity(), (Cursor) thing);
+
 		} catch (IndexOutOfBoundsException ioob) {
 			Log.w(TAG, "getComicData() FAIL: IndexOutOfBoundsException for index " + index, ioob);
 			return null;
@@ -54,10 +58,13 @@ public class RageList extends ListFragment implements LoaderCallbacks<Cursor> {
 	public void onListItemClick(ListView lv, View v, int position, long id) {
 		RageComic c = this.getComicData(position);
 		Intent viewIntent = new Intent(Intent.ACTION_VIEW);
-		viewIntent.setDataAndType(c.getImageUri(), this.getMimeType(c.getImageUri()));
+		String relativePath = this.getActivity().getString(R.string.rage_comics_folder) + "/" +
+				   										   c.getImageUri().getLastPathSegment();
+		Uri contentUri = Uri.parse(RageComics.URI_PREFIX + "/" + relativePath);
+		viewIntent.setDataAndType(contentUri, "image/*");
+		viewIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 		this.startActivity(viewIntent);
 	}
-
 	
 	// LOADER CALLBACKS
 	public Loader<Cursor> onCreateLoader(int loaderId, Bundle args) {
@@ -71,6 +78,7 @@ public class RageList extends ListFragment implements LoaderCallbacks<Cursor> {
 		// Swap in the new cursor. (The framework will take care of closing the old cursor once we return.)
 		Log.i(TAG, "Entering onLoadFinished()");
 		adapter.swapCursor(data);
+		this.setListShown(true);
 	}
 
 	public void onLoaderReset(Loader<Cursor> loader) {

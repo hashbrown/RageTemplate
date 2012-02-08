@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.Window;
 
 
 public class RageTemplateActivity extends Activity {
@@ -17,8 +18,10 @@ public class RageTemplateActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.rage_activity);
 		this.setProgressBarIndeterminate(true);
+		this.setProgressBarIndeterminateVisibility(false);
         
 		this.rageDownloader = new RageDownloader(this);
     }
@@ -36,7 +39,7 @@ public class RageTemplateActivity extends Activity {
 		switch (item.getItemId()) {
 			case R.id.get_more_rage:
 				this.setProgressBarIndeterminateVisibility(true);
-				this.rageDownloader.getMoreRage(25);
+				this.rageDownloader.getMoreRage(10);
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);

@@ -1,7 +1,9 @@
 package org.ragetemplate.contentproviders;
 
+import java.io.File;
 import java.util.Date;
 
+import org.ragetemplate.AppConfig;
 import org.ragetemplate.contentproviders.RageProviderContracts.RageComics;
 import org.ragetemplate.data.RageComic;
 
@@ -17,17 +19,22 @@ public class RageLoader extends CursorLoader {
 	// our 'projection' of columns we want to receive
 	static final String SORT_ORDER = RageComics.CREATED + " ASC";
 
-	public static RageComic newComicFromCursor(Cursor cursor) {
+	public static RageComic newComicFromCursor(Context ctx, Cursor cursor) {
 		// Column numbers here rely on the ARCHIVE_COLUMNS list above
 		String name = cursor.getString(cursor.getColumnIndex(RageComics.NAME));
 		String title = cursor.getString(cursor.getColumnIndex(RageComics.TITLE));
 		String author = cursor.getString(cursor.getColumnIndex(RageComics.AUTHOR));
-		Uri imageUri = Uri.parse(cursor.getString(cursor.getColumnIndex(RageComics.IMAGE_URI)));
-		Uri thumbUri = Uri.parse(cursor.getString(cursor.getColumnIndex(RageComics.THUMBNAIL_URI)));
 		long timestamp = cursor.getLong(cursor.getColumnIndex(RageComics.CREATED));
 		boolean isNSFW = (cursor.getInt(cursor.getColumnIndex(RageComics.IS_NSFW)) == 1);		
+
+		AppConfig cfg = new AppConfig(ctx);
+		String comicFileName = cursor.getString(cursor.getColumnIndex(RageComics.COMIC_FILENAME));
+		Uri comicUri = Uri.fromFile(new File(cfg.getComicsDir(), comicFileName));
+		String thumbnailFileName = cursor.getString(cursor.getColumnIndex(RageComics.THUMBNAIL_FILENAME));
+		Uri thumbnailUri = Uri.fromFile(new File(cfg.getThumbnailsDir(), thumbnailFileName));
+		
 		// Build the rageComic from the cursor
-		RageComic rageComic = new RageComic(name, title, author, imageUri, thumbUri, new Date(timestamp), isNSFW);
+		RageComic rageComic = new RageComic(name, title, author, comicUri, thumbnailUri, new Date(timestamp), isNSFW);
 		return rageComic;
 	}
 

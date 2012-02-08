@@ -1,11 +1,10 @@
 package org.ragetemplate.contentproviders;
 
 import org.ragetemplate.R;
-import org.ragetemplate.contentproviders.RageProviderContracts.RageComics;
+import org.ragetemplate.data.RageComic;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,21 +14,17 @@ import android.widget.TextView;
 
 public class RageCursorAdapter extends CursorAdapter {
 
-
 	public RageCursorAdapter(Context context) {
 		super(context, null);
 	}
 
 	@Override
 	public void bindView(View row, final Context context, final Cursor cursor) {
-		
-		Uri thumbUri = Uri.parse(cursor.getString(cursor.getColumnIndex(RageComics.THUMBNAIL_URI)));
-		String title = cursor.getString(cursor.getColumnIndex(RageComics.TITLE));
-
+		RageComic c = RageLoader.newComicFromCursor(context, cursor);
 		TextView titleView = (TextView) row.findViewById(R.id.title);
-		titleView.setText(title);
+		titleView.setText(c.getTitle());
 		ImageView thumbView = (ImageView) row.findViewById(R.id.thumbnail);
-		thumbView.setImageURI(thumbUri);
+		thumbView.setImageURI(c.getThumbnailUri());
 	}
 	
 	@Override

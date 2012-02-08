@@ -1,18 +1,25 @@
 package org.ragetemplate.contentproviders;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 
+import org.ragetemplate.AppConfig;
 import org.ragetemplate.contentproviders.RageProviderContracts.RageComics;
 
 import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.UriMatcher;
+import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+import android.os.Bundle;
+import android.os.ParcelFileDescriptor;
+import android.util.Log;
 
 public class RageProvider extends ContentProvider {
 
@@ -28,7 +35,7 @@ public class RageProvider extends ContentProvider {
 	private static final UriMatcher uriMatcher;
 	// Handle to our ProviderDbHelper.
 	private ProviderDbHelper dbHelper;
-
+	
 	// static 'setup' block
 	static {
 		// Build up URI matcher
@@ -260,4 +267,19 @@ public class RageProvider extends ContentProvider {
 		return null;
 	}
 
+	@Override
+	public ParcelFileDescriptor openFile(Uri uri, String mode) throws FileNotFoundException {
+		File file = new File(this.getContext().getFilesDir(), uri.getPath());
+		ParcelFileDescriptor parcel = ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY);
+		return parcel;
+	}
+
+//	public AssetFileDescriptor openTypedAssetFile(Uri uri, String mimeTypeFilter, Bundle opts) {
+//		try {
+//			return super.openTypedAssetFile(uri, mimeTypeFilter, opts);
+//		} catch (FileNotFoundException e) {
+//			Log.e(TAG, "OH NOES!  Can't find file: " + uri);
+//		}
+//		return null;
+//	}
 }

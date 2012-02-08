@@ -19,7 +19,7 @@ import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.ragetemplate.R;
+import org.ragetemplate.AppConfig;
 import org.ragetemplate.RageTemplateActivity;
 import org.ragetemplate.contentproviders.RageProviderContracts.RageComics;
 import org.ragetemplate.data.RageComic;
@@ -44,9 +44,9 @@ public class RageDownloader {
 	
 	public RageDownloader(RageTemplateActivity activity) {
 		this.activity = activity;
-		
-		this.imagesDir = new File(activity.getFilesDir(), activity.getString(R.string.rage_comics_folder));
-		this.thumbnailsDir = new File(activity.getFilesDir(), activity.getString(R.string.rage_thumbnails_folder));
+		AppConfig cfg = new AppConfig(activity);
+		this.imagesDir = cfg.getComicsDir();
+		this.thumbnailsDir = cfg.getThumbnailsDir();
 
 		// make sure the image dirs exist
 		for (File f : Py.typedList(this.imagesDir, this.thumbnailsDir)) {
@@ -111,11 +111,11 @@ public class RageDownloader {
 			if (!c.isNSFW()) {
 				File thumbFile = new File(this.thumbnailsDir, c.getThumbnailUri().getLastPathSegment());
 				URL thumbUrl = new URL(c.getThumbnailUri().toString());
-				this.saveImageAndCloseStream(thumbFile, this.buildImageStream(thumbUrl));				
+				this.saveImageAndCloseStream(thumbFile, this.buildImageStream(thumbUrl));
 			}
 			
 		} catch (MalformedURLException e) {
-			Log.e(TAG, "YOU FAIL");
+			Log.e(TAG, "Problem downloading comic: ", e);
 		}
 	}
 
@@ -209,10 +209,11 @@ public class RageDownloader {
 			boolean NSFW = obj.getBoolean("over_18");
 			Date createDate = new Date(obj.getLong("created_utc"));
 			String imageUriStr = obj.getString("url");
-			if (!imageUriStr.endsWith(".png")) {
+			Uri imageUri = Uri.parse(imageUriStr);
+			if (!imageUri.getLastPathSegment().contains(".")) {
 				imageUriStr = imageUriStr + ".png";
 			}
-			Uri imageUri = Uri.parse(imageUriStr);
+			imageUri = Uri.parse(imageUriStr);
 			
 			r = new RageComic(name, title, author, imageUri, thumbnailUri, createDate, NSFW);                
 			return r;
@@ -237,6 +238,7 @@ public class RageDownloader {
 				Log.wtf(TAG, "FAIL when trying to write out a comic image??  File: " + outFile);
 			}		
 	}
+	
 
 	int performInserts(List<RageComic> comics) {
 		Set<ContentValues> insertsValues = new HashSet<ContentValues>();

@@ -31,8 +31,8 @@ public class ProviderDbHelper extends SQLiteOpenHelper {
 		sqlBuilder.append(RageComics.NAME + " TEXT, ");
 		sqlBuilder.append(RageComics.TITLE + " TEXT, ");
 		sqlBuilder.append(RageComics.AUTHOR + " TEXT, ");
-		sqlBuilder.append(RageComics.IMAGE_URI + " TEXT, ");
-		sqlBuilder.append(RageComics.THUMBNAIL_URI + " TEXT, ");
+		sqlBuilder.append(RageComics.COMIC_FILENAME + " TEXT, ");
+		sqlBuilder.append(RageComics.THUMBNAIL_FILENAME + " TEXT, ");
 		sqlBuilder.append(RageComics.CREATED + " INTEGER, ");
 		sqlBuilder.append(RageComics.IS_NSFW + " INTEGER");
 		sqlBuilder.append(");");
