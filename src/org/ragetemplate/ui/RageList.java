@@ -5,6 +5,7 @@ import org.ragetemplate.contentproviders.RageLoader;
 import org.ragetemplate.data.RageComic;
 
 import android.app.ListFragment;
+import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
@@ -16,7 +17,7 @@ import android.webkit.MimeTypeMap;
 import android.widget.ListView;
 
 
-public class RageList extends ListFragment {
+public class RageList extends ListFragment implements LoaderCallbacks<Cursor> {
 
 	private final String TAG = getClass().getSimpleName();
 	
@@ -31,6 +32,8 @@ public class RageList extends ListFragment {
 
 		adapter = new RageCursorAdapter(this.getActivity());
 		setListAdapter(adapter);
+		
+		this.getActivity().getLoaderManager().initLoader(0, null, this);
 //		this.setListShown(false); // Start out with a progress indicator.
 	}
 	
